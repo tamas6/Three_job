@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Three Js learning</title>
+	</head>
+	<body>
+		<div id="container"></div>
+		<script type="module">
+			import * as THREE from "./three.module.js";
+
+			const scene = new THREE.Scene();
+
+			const width = window.innerWidth;
+			const height = window.innerHeight;
+			const viewAngle = 45;
+			const nearClipping = 0.1;
+			const farClipping = 9999;
+			const camera = new THREE.PerspectiveCamera(
+				viewAngle,
+				width / height,
+				nearClipping,
+				farClipping
+			);
+			camera.position.set(0, 0, 10);
+
+			const cubeGeometry = new THREE.BoxGeometry();
+			const globeGeometry = new THREE.SphereGeometry();
+
+			// Load texture
+			const textureLoader = new THREE.TextureLoader();
+			const texture = textureLoader.load("./assets/images/nugaonlog.jpg");
+			const material = new THREE.MeshBasicMaterial({ map: texture });
+
+			const cube = new THREE.Mesh(cubeGeometry, material);
+			cube.position.set(0, 0, 0);
+			const globe = new THREE.Mesh(globeGeometry, material);
+			globe.position.set(1, 1, 0);
+			scene.add(globe, cube);
+
+			const renderer = new THREE.WebGLRenderer({ antialias: true });
+			renderer.setSize(width, height);
+
+			const element = document.getElementById("container");
+			element.appendChild(renderer.domElement);
+
+			function animate() {
+				cube.rotation.x += 0.01;
+				cube.rotation.y += 0.01;
+
+				globe.rotation.x += 0.02;
+				globe.rotation.y += 0.01;
+
+				renderer.render(scene, camera);
+				requestAnimationFrame(animate);
+			}
+
+			animate();
+		</script>
+	</body>
+</html>

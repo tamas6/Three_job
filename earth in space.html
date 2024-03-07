@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Three Js learning</title>
+	</head>
+	<body>
+		<div id="container"></div>
+		<script type="module">
+			import * as THREE from "./three.module.js";
+			//scene setup
+			const scene = new THREE.Scene();
+
+			const width = window.innerWidth;
+			const height = window.innerHeight;
+			const viewAngle = 90;
+			const nearClipping = 0.1;
+			const farClipping = 9999;
+			const camera = new THREE.PerspectiveCamera(
+				viewAngle,
+				width / height,
+				nearClipping,
+				farClipping
+			);
+			camera.position.set(0, 0, 4);
+
+			const globeGeometry = new THREE.SphereGeometry(1, 64, 64); // 64 is preferred over 32
+
+			// Load texture
+			const textureLoader = new THREE.TextureLoader();
+			const texture = textureLoader.load("./assets/images/texture-earth.jpg");
+			const material = new THREE.MeshBasicMaterial({ map: texture });
+
+			const globe = new THREE.Mesh(globeGeometry, material);
+			globe.position.set(0, 0, 0);
+			scene.add(globe);
+			// renderer
+			const renderer = new THREE.WebGLRenderer({ antialias: true });
+			renderer.setSize(width, height);
+			// element to refer html
+			const element = document.getElementById("container");
+			element.appendChild(renderer.domElement);
+
+			// Add star particle system
+			const starCount = 2000;
+			const stars = new Float32Array(starCount * 3); // Each star has x, y, z coordinates
+			const starMaterial = new THREE.PointsMaterial({
+				color: "lightblue",
+				size: 1,
+			});
+
+			for (let i = 0; i < starCount * 3; i += 3) {
+				stars[i] = Math.random() * 1000 - 500; // Random x position within a range
+				stars[i + 1] = Math.random() * 1000 - 500; // Random y position within a range
+				stars[i + 2] = Math.random() * 1000 - 1100; // Random z position within a range
+			}
+
+			const starGeometry = new THREE.BufferGeometry();
+			starGeometry.setAttribute(
+				"position",
+				new THREE.BufferAttribute(stars, 3)
+			);
+
+			const starParticleSystem = new THREE.Points(starGeometry, starMaterial);
+			scene.add(starParticleSystem);
+
+			// animating
+			function animate() {
+				globe.rotation.x += 0.001;
+				globe.rotation.y += 0.001;
+
+				renderer.render(scene, camera);
+				requestAnimationFrame(animate);
+			}
+
+			animate();
+		</script>
+	</body>
+</html>
