@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Three Js learning</title>
+	</head>
+	<body>
+		<div id="container"></div>
+		<script type="module">
+			import * as THREE from "./three.module.js";
+
+			const scene = new THREE.Scene();
+
+			const width = window.innerWidth;
+			const height = window.innerHeight;
+			const viewAngle = 45;
+			const nearClipping = 0.1;
+			const farClipping = 9999;
+			const camera = new THREE.PerspectiveCamera(
+				viewAngle,
+				width / height,
+				nearClipping,
+				farClipping
+			);
+			camera.position.set(0, 0, 10);
+
+			const geometry = new THREE.SphereGeometry(1, 32, 16);
+			const boxGeo = new THREE.BoxGeometry();
+
+			// Load texture
+			const textureLoader = new THREE.TextureLoader();
+			const texture = textureLoader.load("./assets/images/texture-earth.jpg");
+			const material = new THREE.MeshBasicMaterial({ map: texture });
+
+			// box material
+			const boxMat = new THREE.MeshBasicMaterial({ color: "lightgreen" });
+
+			const capsule = new THREE.Mesh(geometry, material);
+			capsule.position.set(0, 0, 0);
+
+			const square = new THREE.Mesh(boxGeo, boxMat);
+			square.position.set(-5, 0, 0);
+			scene.add(capsule, square);
+
+			//ConeGeometry (radius: Float, height : Float, radialSegments : Integer)
+			const geometry1 = new THREE.ConeGeometry(2, 5, 32);
+			const material1 = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+			const cone = new THREE.Mesh(geometry1, material1);
+			cone.position.set(6, 0, 0);
+			scene.add(cone);
+
+			const renderer = new THREE.WebGLRenderer({ antialias: true });
+			renderer.setSize(width, height);
+
+			const element = document.getElementById("container");
+			element.appendChild(renderer.domElement);
+
+			function animate() {
+				capsule.rotation.x += 0.001;
+				capsule.rotation.y += 0.001;
+				cone.rotation.x += 0.001;
+				cone.rotation.y += 0.001;
+
+				renderer.render(scene, camera);
+				requestAnimationFrame(animate);
+			}
+
+			animate();
+		</script>
+	</body>
+</html>
