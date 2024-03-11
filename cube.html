@@ -2,58 +2,90 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Three Js learning</title>
 	</head>
+
 	<body>
 		<div id="container"></div>
+
 		<script type="module">
 			import * as THREE from "./three.module.js";
 
+			// Scene
 			const scene = new THREE.Scene();
 
-			const width = window.innerWidth;
-			const height = window.innerHeight;
-			const viewAngle = 45;
-			const nearClipping = 0.1;
-			const farClipping = 9999;
+			// Camera
+			const width = window.innerWidth; // width of browser window
+			const height = window.innerHeight; // height of browser window
+			const viewAngle = 60; // view angle for Camera
+			const nearClipping = 0.1; // near view point of camera
+			const farClipping = 9999; // far view point of camera
+
 			const camera = new THREE.PerspectiveCamera(
 				viewAngle,
 				width / height,
 				nearClipping,
 				farClipping
 			);
-			camera.position.set(0, 0, 10);
+			camera.position.set(0, 0, 12);
 
-			const cubeGeometry = new THREE.BoxGeometry();
-			const globeGeometry = new THREE.SphereGeometry();
+			// Geometry + Material = Mesh
+			// // BoxGeometry >> CUBE
+			const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+			// MeshBasicMaterial >> Material for CUBE
+			function createMaterial(color) {
+				new THREE.MeshBasicMaterial({ color: color });
+			}
+			const cubecolor = createMaterial("blue");
 
-			// Load texture
-			const textureLoader = new THREE.TextureLoader();
-			const texture = textureLoader.load("./assets/images/nugaonlog.jpg");
-			const material = new THREE.MeshBasicMaterial({ map: texture });
+			// Mesh = Geometry + Material
+			const cubeCenter = new THREE.Mesh(cubeGeometry, cubecolor);
+			cubeCenter.position.set(0, 0, 0);
+			const cubeUpLeft = new THREE.Mesh(cubeGeometry, cubecolor);
+			cubeUpLeft.position.set(-3, 3, 0);
+			const cubeLeft = new THREE.Mesh(cubeGeometry, cubecolor);
+			cubeLeft.position.set(-3, 0, 0);
+			const cubeDownLeft = new THREE.Mesh(cubeGeometry, cubecolor);
 
-			const cube = new THREE.Mesh(cubeGeometry, material);
-			cube.position.set(0, 0, 0);
-			const globe = new THREE.Mesh(globeGeometry, material);
-			globe.position.set(1, 1, 0);
-			scene.add(globe, cube);
+			cubeDownLeft.position.set(-3, -3, 0);
+			const cubeUp = new THREE.Mesh(cubeGeometry, cubecolor);
+			cubeUp.position.set(0, 3, 0);
+			const cubeUpRight = new THREE.Mesh(cubeGeometry, cubecolor);
 
-			const renderer = new THREE.WebGLRenderer({ antialias: true });
+			cubeUpRight.position.set(3, 3, 0);
+			const cubeRight = new THREE.Mesh(cubeGeometry, cubecolor);
+			cubeRight.position.set(3, 0, 0);
+			const cubeDownRight = new THREE.Mesh(cubeGeometry, cubecolor);
+			cubeDownRight.position.set(3, -3, 0);
+			const cubeDown = new THREE.Mesh(cubeGeometry, cubecolor);
+			cubeDown.position.set(0, -3, 0);
+			// Add Mesh in scenes
+			scene.add(
+				cubeCenter,
+				cubeUpLeft,
+				cubeLeft,
+				cubeUp,
+				cubeDownLeft,
+				cubeDown,
+				cubeDownRight,
+				cubeRight,
+				cubeUpRight
+			);
+
+			// Renderer
+			const renderer = new THREE.WebGLRenderer({ antialize: true });
 			renderer.setSize(width, height);
 
+			// JS to get elements
 			const element = document.getElementById("container");
+			// JS to append domElement into our HTML
 			element.appendChild(renderer.domElement);
 
 			function animate() {
-				cube.rotation.x += 0.01;
-				cube.rotation.y += 0.01;
-
-				globe.rotation.x += 0.02;
-				globe.rotation.y += 0.01;
-
+				requestAnimationFrame(animate); // this method calls `animate` frame again & again
 				renderer.render(scene, camera);
-				requestAnimationFrame(animate);
 			}
 
 			animate();
