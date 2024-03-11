@@ -36,30 +36,36 @@
 			const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
 			// MeshBasicMaterial >> Material for CUBE
 			function createMaterial(color) {
-				new THREE.MeshBasicMaterial({ color: color });
+				return new THREE.MeshBasicMaterial({ color: color });
 			}
-			const cubecolor = createMaterial("blue");
 
 			// Mesh = Geometry + Material
-			const cubeCenter = new THREE.Mesh(cubeGeometry, cubecolor);
+			const cubeCenter = new THREE.Mesh(cubeGeometry, createMaterial("yellow"));
 			cubeCenter.position.set(0, 0, 0);
-			const cubeUpLeft = new THREE.Mesh(cubeGeometry, cubecolor);
+
+			const cubeUpLeft = new THREE.Mesh(cubeGeometry, createMaterial("red"));
 			cubeUpLeft.position.set(-3, 3, 0);
-			const cubeLeft = new THREE.Mesh(cubeGeometry, cubecolor);
+			const cubeLeft = new THREE.Mesh(cubeGeometry, createMaterial("green"));
 			cubeLeft.position.set(-3, 0, 0);
-			const cubeDownLeft = new THREE.Mesh(cubeGeometry, cubecolor);
+			const cubeDownLeft = new THREE.Mesh(
+				cubeGeometry,
+				createMaterial("white")
+			);
 
 			cubeDownLeft.position.set(-3, -3, 0);
-			const cubeUp = new THREE.Mesh(cubeGeometry, cubecolor);
+			const cubeUp = new THREE.Mesh(cubeGeometry, createMaterial("orange"));
 			cubeUp.position.set(0, 3, 0);
-			const cubeUpRight = new THREE.Mesh(cubeGeometry, cubecolor);
+			const cubeUpRight = new THREE.Mesh(cubeGeometry, createMaterial("blue"));
 
 			cubeUpRight.position.set(3, 3, 0);
-			const cubeRight = new THREE.Mesh(cubeGeometry, cubecolor);
+			const cubeRight = new THREE.Mesh(
+				cubeGeometry,
+				createMaterial("lightblue")
+			);
 			cubeRight.position.set(3, 0, 0);
-			const cubeDownRight = new THREE.Mesh(cubeGeometry, cubecolor);
+			const cubeDownRight = new THREE.Mesh(cubeGeometry, createMaterial("red"));
 			cubeDownRight.position.set(3, -3, 0);
-			const cubeDown = new THREE.Mesh(cubeGeometry, cubecolor);
+			const cubeDown = new THREE.Mesh(cubeGeometry, createMaterial("red"));
 			cubeDown.position.set(0, -3, 0);
 			// Add Mesh in scenes
 			scene.add(
@@ -84,6 +90,22 @@
 			element.appendChild(renderer.domElement);
 
 			function animate() {
+				cubeCenter.rotation.x += 0.002;
+				cubeCenter.rotation.y += 0.002;
+
+				cubeUpLeft.rotation.x += 0.003;
+				cubeUpLeft.rotation.y += 0.003;
+				cubeLeft.rotation.x += 0.003;
+				cubeLeft.rotation.y += 0.003;
+				cubeUp.rotation.x += 0.003;
+				cubeUp.rotation.y += 0.003;
+				cubeDownLeft,
+					cubeDown,
+					cubeDownRight,
+					cubeRight,
+					(cubeUpRight.rotation.x += 0.003);
+				cubeUpRight.rotation.y += 0.002;
+
 				requestAnimationFrame(animate); // this method calls `animate` frame again & again
 				renderer.render(scene, camera);
 			}
