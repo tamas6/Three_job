@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Three Js learning</title>
+	</head>
+
+	<body>
+		<div id="container"></div>
+
+		<script type="module">
+			import * as THREE from "./three.module.js";
+
+			// Scene
+			const scene = new THREE.Scene();
+
+			// Camera
+			const width = window.innerWidth; // width of browser window
+			const height = window.innerHeight; // height of browser window
+			const viewAngle = 75; // view angle for Camera
+			const nearClipping = 0.1; // near view point of camera
+			const farClipping = 9999; // far view point of camera
+
+			const camera = new THREE.PerspectiveCamera(
+				viewAngle,
+				width / height,
+				nearClipping,
+				farClipping
+			);
+			camera.position.set(0, 5, 15);
+
+			// Geometry + Material = Mesh
+			// // BoxGeometry >> CUBE
+			const cubeGeometry = new THREE.BoxGeometry(1, 1, 1);
+			// MeshBasicMaterial >> Material for CUBE
+			function createMaterial(color) {
+				return new THREE.MeshBasicMaterial({ color: color });
+			}
+
+			// Mesh = Geometry + Material
+			// / PlaneGeometry >> PLANE
+			const geometry = new THREE.PlaneGeometry(10, 10);
+			// MesBasicMaterial >> for Plane
+			const material = new THREE.MeshBasicMaterial({
+				color: "yellow",
+				side: THREE.DoubleSide,
+			});
+			const plane = new THREE.Mesh(geometry, material);
+			// Add Plane Mesh into the scene:
+			plane.rotation.set(1.6, 0, 0);
+
+			// CUBE Adding
+			const cubeGeo = new THREE.BoxGeometry(2, 2, 0);
+			const cubeMat = new THREE.MeshBasicMaterial({ color: "red" });
+			const cube = new THREE.Mesh(cubeGeo, cubeMat);
+			scene.add(plane, cube);
+
+			// Renderer
+			const renderer = new THREE.WebGLRenderer({ antialize: true });
+			renderer.setSize(width, height);
+
+			// JS to get elements
+			const element = document.getElementById("container");
+			// JS to append domElement into our HTML
+			element.appendChild(renderer.domElement);
+
+			function animate() {
+				//plane.rotation.x += 0.01;
+				requestAnimationFrame(animate); // this method calls `animate` frame again & again
+				renderer.render(scene, camera);
+			}
+
+			animate();
+		</script>
+	</body>
+</html>
